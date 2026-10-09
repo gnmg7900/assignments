@@ -1,0 +1,18 @@
+[project]
+readme = "README.md"
+requires-python = ">=3.8"
+description = "First assignment of the Foundations Learning Path"
+authors = [
+    {name = "Fernando Cordeiro<fernando@daredata.engineering>"}
+]
+
+[project.optional-dependencies]
+dev = ["pytest", "pylint", "pytest-cov", "toml"]
+
+[tool.coverage.run]
+omit = [
+    "*/conftest.py", "*/test*", # omit test files
+]
+
+[tool.coverage.report]
+fail_under = 80
