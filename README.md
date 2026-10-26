@@ -1,5 +1,7 @@
 # FAAST Advance Foundations Assignments
 
+[![CI](https://github.com/gnmg7900/assignments/actions/workflows/ci.yml/badge.svg)](https://github.com/gnmg7900/assignments/actions/workflows/ci.yml)
+
 ## Introduction
 
 We are going to be using this project throughout the course.
