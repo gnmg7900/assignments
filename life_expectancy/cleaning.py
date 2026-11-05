@@ -1,26 +1,29 @@
 """Clean life expectancy data."""
 
-# Importing packages
 import argparse
 from pathlib import Path
 
 import pandas as pd
 
 DATA_DIR = Path(__file__).parent / "data"
+RAW_FILE = "eu_life_expectancy_raw.tsv"
+COMBINED_COLUMN = "unit,sex,age,geo\\time"
 
 
-def clean_data(country="PT"):
-    """Load, clean, and save a country life expectancy data."""
-    # Loading the raw data
-    life_data = pd.read_csv(DATA_DIR / "eu_life_expectancy_raw.tsv", sep="\t")
+def load_data() -> pd.DataFrame:
+    """Load the raw life expectancy data."""
+    return pd.read_csv(DATA_DIR / RAW_FILE, sep="\t")
 
+
+def clean_data(life_data: pd.DataFrame, country: str = "PT") -> pd.DataFrame:
+    """Cleaning and filtering life expectancy data for a specific country."""
     # Unpivoting the data to long format
-    life_data_long = pd.melt(life_data, id_vars=["unit,sex,age,geo\\time"], var_name="year")
+    life_data_long = pd.melt(life_data, id_vars=[COMBINED_COLUMN], var_name="year")
 
     # unstacking the first column to separate the combined values into individual columns
-    life_data_long[["unit", "sex", "age", "region"]] = life_data_long["unit,sex,age,geo\\time"].str.split(",", expand=True)
+    life_data_long[["unit", "sex", "age", "region"]] = life_data_long[COMBINED_COLUMN].str.split(",", expand=True)
 
-    life_data_long.drop(columns=["unit,sex,age,geo\\time"], inplace=True)
+    life_data_long.drop(columns=[COMBINED_COLUMN], inplace=True)
 
     # Reordering the columns to match the expected output
     life_data_long = life_data_long[["unit", "sex", "age", "region", "year", "value"]].copy()
@@ -37,14 +40,23 @@ def clean_data(country="PT"):
     # Filtering the data in which the "region" is the chosen country
     life_data_long_country = life_data_long[life_data_long["region"] == country]
 
-    # Saving the filtered data to a new CSV file under the data folder
-    life_data_long_country.to_csv(DATA_DIR / f"{country.lower()}_life_expectancy.csv", index=False)
-
     return life_data_long_country
+
+
+def save_data(life_data_country: pd.DataFrame, country: str = "PT") -> None:
+    """Saving the cleaned life expectancy data to a CSV file."""
+    life_data_country.to_csv(DATA_DIR / f"{country.lower()}_life_expectancy.csv", index=False)
+
+
+def main(country: str = "PT") -> None:
+    """Loading, cleaning and saving the life expectancy data for a country."""
+    life_data = load_data()
+    life_data_country = clean_data(life_data, country=country)
+    save_data(life_data_country, country=country)
 
 
 if __name__ == "__main__":  # pragma: no cover
     parser = argparse.ArgumentParser()
     parser.add_argument("--country", type=str, default="PT", help="Country code to filter the life expectancy data")
     args = parser.parse_args()
-    clean_data(country=args.country)
+    main(country=args.country)
