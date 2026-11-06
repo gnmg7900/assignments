@@ -1,6 +1,5 @@
 """Clean life expectancy data."""
 
-import argparse
 from pathlib import Path
 
 import pandas as pd
@@ -46,17 +45,3 @@ def clean_data(life_data: pd.DataFrame, country: str = "PT") -> pd.DataFrame:
 def save_data(life_data_country: pd.DataFrame, country: str = "PT") -> None:
     """Saving the cleaned life expectancy data to a CSV file."""
     life_data_country.to_csv(DATA_DIR / f"{country.lower()}_life_expectancy.csv", index=False)
-
-
-def main(country: str = "PT") -> None:
-    """Loading, cleaning and saving the life expectancy data for a country."""
-    life_data = load_data()
-    life_data_country = clean_data(life_data, country=country)
-    save_data(life_data_country, country=country)
-
-
-if __name__ == "__main__":  # pragma: no cover
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--country", type=str, default="PT", help="Country code to filter the life expectancy data")
-    args = parser.parse_args()
-    main(country=args.country)
