@@ -4,7 +4,9 @@ import argparse
 
 import pandas as pd
 
-from life_expectancy.cleaning import clean_data, load_data, save_data
+from life_expectancy.cleaning import clean_data
+from life_expectancy.data_io import load_data, save_data
+
 
 def main() -> pd.DataFrame:
     """Parse command-line options and run the cleaning process"""
@@ -16,10 +18,11 @@ def main() -> pd.DataFrame:
     )
     args = parser.parse_args()
 
-    life_data=load_data()
+    life_data = load_data()
     cleaned_data = clean_data(life_data, country=args.country)
     save_data(cleaned_data, country=args.country)
     return cleaned_data
 
-if __name__ == "__main__": # pragma: no cover
+
+if __name__ == "__main__":  # pragma: no cover
     main()

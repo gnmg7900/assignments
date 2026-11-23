@@ -1,17 +1,8 @@
 """Clean life expectancy data."""
 
-from pathlib import Path
-
 import pandas as pd
 
-DATA_DIR = Path(__file__).parent / "data"
-RAW_FILE = "eu_life_expectancy_raw.tsv"
 COMBINED_COLUMN = "unit,sex,age,geo\\time"
-
-
-def load_data() -> pd.DataFrame:
-    """Load the raw life expectancy data."""
-    return pd.read_csv(DATA_DIR / RAW_FILE, sep="\t")
 
 
 def clean_data(life_data: pd.DataFrame, country: str = "PT") -> pd.DataFrame:
@@ -40,8 +31,3 @@ def clean_data(life_data: pd.DataFrame, country: str = "PT") -> pd.DataFrame:
     life_data_long_country = life_data_long[life_data_long["region"] == country]
 
     return life_data_long_country
-
-
-def save_data(life_data_country: pd.DataFrame, country: str = "PT") -> None:
-    """Saving the cleaned life expectancy data to a CSV file."""
-    life_data_country.to_csv(DATA_DIR / f"{country.lower()}_life_expectancy.csv", index=False)
