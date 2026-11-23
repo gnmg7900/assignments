@@ -23,7 +23,7 @@ def test_main(
     monkeypatch.setattr(sys, "argv", ["life_expectancy.cli"])
     monkeypatch.setattr(cli, "load_data", lambda: eu_life_expectancy_raw)
     monkeypatch.setattr(data_io, "DATA_DIR", tmp_path)
-    to_csv = Mock()
+    to_csv = Mock(side_effect=lambda *args, **kwargs: print("to_csv mocked: no file written"))
     monkeypatch.setattr(pd.DataFrame, "to_csv", to_csv)
 
     result = cli.main()

@@ -22,7 +22,7 @@ def test_load_data(monkeypatch):
 def test_save_data(monkeypatch, tmp_path):
     """Save data without writing a file during the test."""
     monkeypatch.setattr(data_io, "DATA_DIR", tmp_path)
-    to_csv = Mock()
+    to_csv = Mock(side_effect=lambda *args, **kwargs: print("to_csv mocked: no file written"))
     monkeypatch.setattr(pd.DataFrame, "to_csv", to_csv)
     data = pd.DataFrame({"region": ["PT"]})
 
